@@ -473,6 +473,32 @@ class _ServicesPageState extends State<ServicesPage> {
   }
 
   Future<void> _handlePurchase(BuildContext context, Map<String, dynamic> service) async {
+    // Show loading indicator
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Center(
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: AppColors.darkGrey,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              CircularProgressIndicator(color: AppColors.goldAccent),
+              SizedBox(height: 16),
+              Text(
+                'Connecting to payment...',
+                style: TextStyle(color: AppColors.offWhite),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
     try {
       // Extract price amount (remove $ and commas)
       final priceStr = service['price']!.replaceAll('\$', '').replaceAll(',', '');
@@ -480,12 +506,34 @@ class _ServicesPageState extends State<ServicesPage> {
       // Convert dollars to cents (Stripe requires cents)
       final amount = priceInDollars * 100;
 
-      await StripeService.createCheckoutSession(
+      print('🛒 Processing service booking: ${service['title']}');
+      print('💰 Price: \$${priceInDollars} = $amount cents');
+
+      final success = await StripeService.createCheckoutSession(
         productName: service['title']!,
         productDescription: service['description']!,
         amount: amount,
       );
+
+      // Close loading dialog
+      if (mounted) Navigator.pop(context);
+
+      if (!success) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to connect to payment service. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
     } catch (e) {
+      // Close loading dialog
+      if (mounted) Navigator.pop(context);
+      
+      print('❌ Booking error: $e');
+      
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

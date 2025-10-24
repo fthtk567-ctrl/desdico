@@ -30,6 +30,11 @@ class StripeService {
     String currency = 'usd',
   }) async {
     try {
+      print('🔵 Creating Stripe checkout session...');
+      print('   Product: $productName');
+      print('   Amount: $amount cents (\$${amount / 100})');
+      print('   Backend URL: $_backendUrl');
+
       // Call Vercel backend to create Stripe Checkout Session
       final response = await http.post(
         Uri.parse(_backendUrl),
@@ -46,25 +51,32 @@ class StripeService {
         }),
       );
 
+      print('📡 Response Status: ${response.statusCode}');
+      print('📡 Response Body: ${response.body}');
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final sessionId = data['sessionId'] as String;
+        
+        print('✅ Session created: $sessionId');
 
         // Redirect to Stripe Checkout using Stripe.js
         if (kIsWeb) {
+          print('🌐 Redirecting to Stripe Checkout...');
           _redirectToCheckout(sessionId);
           return true;
         } else {
-          print('Stripe Checkout is only available on web platform');
+          print('❌ Stripe Checkout is only available on web platform');
           return false;
         }
       } else {
-        print('Failed to create checkout session: ${response.statusCode}');
-        print('Response: ${response.body}');
+        print('❌ Failed to create checkout session: ${response.statusCode}');
+        print('❌ Response: ${response.body}');
         return false;
       }
-    } catch (e) {
-      print('Error creating checkout session: $e');
+    } catch (e, stackTrace) {
+      print('❌ Error creating checkout session: $e');
+      print('❌ Stack trace: $stackTrace');
       return false;
     }
   }

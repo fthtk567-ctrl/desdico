@@ -68,7 +68,6 @@ module.exports = async (req, res) => {
       },
       // Enable 3D Secure (SCA) for card payments
       payment_intent_data: {
-        setup_future_usage: null,
         description: `Purchase: ${productName}`,
         metadata: {
           product: productName,
