@@ -53,9 +53,26 @@ class CustomFooter extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              '© 2025 Dilek Leyla LLC. | desdico.com | All rights reserved.',
-              style: AppTextStyles.bodySmall,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '© 2025 Dilek Leyla LLC. | desdico.com | All rights reserved.',
+                    style: AppTextStyles.bodySmall,
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      _buildBottomLink(context, 'Terms', '/terms'),
+                      Text(' | ', style: AppTextStyles.bodySmall.copyWith(color: AppColors.offWhite.withOpacity(0.5))),
+                      _buildBottomLink(context, 'Privacy', '/privacy'),
+                      Text(' | ', style: AppTextStyles.bodySmall.copyWith(color: AppColors.offWhite.withOpacity(0.5))),
+                      _buildBottomLink(context, 'Refund Policy', '/refund'),
+                    ],
+                  ),
+                ],
+              ),
             ),
             _buildSocialIcons(),
           ],
@@ -84,6 +101,17 @@ class CustomFooter extends StatelessWidget {
           '© 2025 Dilek Leyla LLC.\ndesdico.com\nAll rights reserved.',
           style: AppTextStyles.bodySmall,
           textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildBottomLink(context, 'Terms', '/terms'),
+            Text(' | ', style: AppTextStyles.bodySmall.copyWith(color: AppColors.offWhite.withOpacity(0.5))),
+            _buildBottomLink(context, 'Privacy', '/privacy'),
+            Text(' | ', style: AppTextStyles.bodySmall.copyWith(color: AppColors.offWhite.withOpacity(0.5))),
+            _buildBottomLink(context, 'Refund', '/refund'),
+          ],
         ),
       ],
     );
@@ -184,6 +212,21 @@ class CustomFooter extends StatelessWidget {
           style: AppTextStyles.bodySmall.copyWith(
             color: AppColors.offWhite.withOpacity(0.7),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBottomLink(BuildContext context, String title, String route) {
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, route);
+      },
+      child: Text(
+        title,
+        style: AppTextStyles.bodySmall.copyWith(
+          color: AppColors.goldAccent.withOpacity(0.8),
+          decoration: TextDecoration.underline,
         ),
       ),
     );
