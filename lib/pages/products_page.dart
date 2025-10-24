@@ -5,6 +5,7 @@ import '../constants/app_text_styles.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_footer.dart';
 import '../widgets/scroll_to_top_button.dart';
+import '../services/stripe_service.dart';
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
@@ -248,10 +249,7 @@ class _ProductsPageState extends State<ProductsPage> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  // TODO: Integrate Paddle payment
-                  _showPaddleInfo(product['title'], product['price']);
-                },
+                onPressed: () => _handlePurchase(product),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.goldAccent,
                   foregroundColor: AppColors.deepBlack,
@@ -272,63 +270,26 @@ class _ProductsPageState extends State<ProductsPage> {
     );
   }
 
-  void _showPaddleInfo(String title, String price) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.darkGrey,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: AppColors.goldAccent.withOpacity(0.3)),
-        ),
-        title: Row(
-          children: [
-            const Icon(Icons.payment, color: AppColors.goldAccent, size: 32),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text('Purchase: $title', style: AppTextStyles.heading4),
-            ),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Price: $price',
-              style: AppTextStyles.heading3.copyWith(
-                color: AppColors.goldAccent,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Paddle Payment Integration Required',
-              style: AppTextStyles.bodyMedium,
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'To complete this purchase, you need to:\n\n'
-              '1. Create a Paddle account at paddle.com\n'
-              '2. Get your Vendor ID and API keys\n'
-              '3. Configure product IDs in Paddle dashboard\n'
-              '4. Integrate Paddle.js in web/index.html\n'
-              '5. Add payment processing logic',
-              style: AppTextStyles.bodySmall.copyWith(
-                color: AppColors.offWhite.withOpacity(0.7),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Close',
-              style: TextStyle(color: AppColors.goldAccent),
-            ),
+  Future<void> _handlePurchase(Map<String, dynamic> product) async {
+    try {
+      // Extract price amount (remove $ and commas)
+      final priceStr = product['price']!.replaceAll('\$', '').replaceAll(',', '');
+      final amount = int.parse(priceStr);
+
+      await StripeService.createCheckoutSession(
+        productName: product['title']!,
+        productDescription: product['title']!,
+        amount: amount,
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Colors.red,
           ),
-        ],
-      ),
-    );
+        );
+      }
+    }
   }
 }
