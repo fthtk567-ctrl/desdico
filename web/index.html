@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Elite Architecture & Consultancy | desdico.com - Luxury architecture & premium project consultation for visionary developments. Global design firm delivering excellence.">
+  <meta name="keywords" content="architecture, consultancy, design, premium, elite, luxury, desdico, architectural design, project management, 3D visualization">
+  <meta name="author" content="Elite Architecture Ltd.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="DESDICO">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://desdico.com/">
+  <meta property="og:title" content="Elite Architecture & Consultancy | Global Design Firm">
+  <meta property="og:description" content="Luxury architecture & premium project consultation for visionary developments.">
+  <meta property="og:image" content="https://desdico.com/assets/og-image.jpg">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://desdico.com/">
+  <meta property="twitter:title" content="Elite Architecture & Consultancy | Global Design Firm">
+  <meta property="twitter:description" content="Luxury architecture & premium project consultation for visionary developments.">
+  <meta property="twitter:image" content="https://desdico.com/assets/twitter-image.jpg">
+
+  <title>Elite Architecture & Consultancy | desdico.com | Global Design Firm</title>
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Paddle.js Integration -->
+  <script src="https://cdn.paddle.com/paddle/paddle.js"></script>
+  <script type="text/javascript">
+    // Initialize Paddle - Replace with your actual Vendor ID
+    // Get your Vendor ID from: https://vendors.paddle.com/authentication
+    if (typeof Paddle !== 'undefined') {
+      Paddle.Setup({ 
+        vendor: 12345  // REPLACE THIS with your actual Paddle Vendor ID
+      });
+    }
+  </script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0A0A0B;
+      color: #F2F2F2;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      overflow-x: hidden;
+    }
+
+    .loading-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #0A0A0B 0%, #1A1A1B 100%);
+      z-index: 9999;
+    }
+
+    .loading-logo {
+      font-size: 48px;
+      font-weight: 700;
+      color: #D4AF37;
+      letter-spacing: 4px;
+      margin-bottom: 30px;
+      animation: fadeInDown 1s ease-out;
+    }
+
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(212, 175, 55, 0.2);
+      border-top-color: #D4AF37;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .loading-text {
+      margin-top: 20px;
+      color: #D4AF37;
+      font-size: 14px;
+      letter-spacing: 2px;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-container" id="loading">
+    <div class="loading-logo">DESDICO</div>
+    <div class="loading-spinner"></div>
+    <div class="loading-text">LOADING EXCELLENCE...</div>
+  </div>
+
+  <script>
+    // Remove loading screen when Flutter app is ready
+    window.addEventListener('flutter-first-frame', function() {
+      const loading = document.getElementById('loading');
+      if (loading) {
+        loading.style.opacity = '0';
+        loading.style.transition = 'opacity 0.5s ease-out';
+        setTimeout(() => loading.remove(), 500);
+      }
+    });
+  </script>
+
+  <!-- This script adds the flutter initialization script to the document -->
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
