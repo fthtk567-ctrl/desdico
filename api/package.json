@@ -1,0 +1,15 @@
+{
+  "name": "desdico-stripe-api",
+  "version": "1.0.0",
+  "description": "Vercel Serverless Functions for Stripe payments",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"No tests yet\""
+  },
+  "dependencies": {
+    "stripe": "^14.10.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
