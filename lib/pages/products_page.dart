@@ -157,13 +157,13 @@ class _ProductsPageState extends State<ProductsPage> {
     ];
 
     return Container(
-      padding: EdgeInsets.all(isMobile ? 40 : 80),
+      padding: EdgeInsets.all(isMobile ? 20 : 80),
       child: GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: isMobile ? 1 : 2,
-          childAspectRatio: isMobile ? 0.8 : 0.75,
+          childAspectRatio: isMobile ? 0.65 : 0.75,
           crossAxisSpacing: 30,
           mainAxisSpacing: 30,
         ),
@@ -171,14 +171,14 @@ class _ProductsPageState extends State<ProductsPage> {
         itemBuilder: (context, index) {
           return FadeInUp(
             delay: Duration(milliseconds: 200 * index),
-            child: _buildProductCard(products[index]),
+            child: _buildProductCard(products[index], isMobile),
           );
         },
       ),
     );
   }
 
-  Widget _buildProductCard(Map<String, dynamic> product) {
+  Widget _buildProductCard(Map<String, dynamic> product, bool isMobile) {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.darkGrey,
@@ -193,27 +193,32 @@ class _ProductsPageState extends State<ProductsPage> {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(30),
+        padding: EdgeInsets.all(isMobile ? 20 : 30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               product['title'],
-              style: AppTextStyles.heading3,
+              style: isMobile 
+                ? AppTextStyles.heading4.copyWith(fontSize: 20)
+                : AppTextStyles.heading3,
             ),
             const SizedBox(height: 15),
             Text(
               product['description'],
               style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.offWhite.withOpacity(0.7),
+                fontSize: isMobile ? 14 : 16,
               ),
+              maxLines: isMobile ? 3 : 4,
+              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 20),
             Text(
               product['price'],
               style: AppTextStyles.heading2.copyWith(
                 color: AppColors.goldAccent,
-                fontSize: 36,
+                fontSize: isMobile ? 28 : 36,
               ),
             ),
             const SizedBox(height: 20),
@@ -226,17 +231,20 @@ class _ProductsPageState extends State<ProductsPage> {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Icon(
                           Icons.check_circle,
                           color: AppColors.goldAccent,
-                          size: 20,
+                          size: 18,
                         ),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
                             (product['features'] as List)[index],
-                            style: AppTextStyles.bodySmall,
+                            style: AppTextStyles.bodySmall.copyWith(
+                              fontSize: isMobile ? 13 : 14,
+                            ),
                           ),
                         ),
                       ],
@@ -253,14 +261,16 @@ class _ProductsPageState extends State<ProductsPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.goldAccent,
                   foregroundColor: AppColors.deepBlack,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  padding: EdgeInsets.symmetric(vertical: isMobile ? 14 : 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 child: Text(
                   'Buy Now',
-                  style: AppTextStyles.button,
+                  style: AppTextStyles.button.copyWith(
+                    fontSize: isMobile ? 14 : 16,
+                  ),
                 ),
               ),
             ),
