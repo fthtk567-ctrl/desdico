@@ -274,11 +274,13 @@ class _ProductsPageState extends State<ProductsPage> {
     try {
       // Extract price amount (remove $ and commas)
       final priceStr = product['price']!.replaceAll('\$', '').replaceAll(',', '');
-      final amount = int.parse(priceStr);
+      final priceInDollars = int.parse(priceStr);
+      // Convert dollars to cents (Stripe requires cents)
+      final amount = priceInDollars * 100;
 
       await StripeService.createCheckoutSession(
         productName: product['title']!,
-        productDescription: product['title']!,
+        productDescription: product['description'] ?? product['title']!,
         amount: amount,
       );
     } catch (e) {

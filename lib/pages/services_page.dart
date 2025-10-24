@@ -6,6 +6,7 @@ import '../widgets/custom_app_bar.dart';
 import '../widgets/custom_footer.dart';
 import '../widgets/scroll_to_top_button.dart';
 import '../widgets/floating_chat_button.dart';
+import '../services/stripe_service.dart';
 
 class ServicesPage extends StatefulWidget {
   const ServicesPage({super.key});
@@ -471,86 +472,29 @@ class _ServicesPageState extends State<ServicesPage> {
     );
   }
 
-  void _handlePurchase(BuildContext context, Map<String, dynamic> service) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.darkGrey,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: AppColors.goldAccent.withOpacity(0.3)),
-        ),
-        title: Row(
-          children: [
-            const Icon(Icons.payment, color: AppColors.goldAccent),
-            const SizedBox(width: 12),
-            Text('Stripe Checkout', style: AppTextStyles.heading4),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'You are about to purchase:',
-              style: AppTextStyles.bodyMedium,
-            ),
-            const SizedBox(height: 15),
-            Text(
-              service['title'],
-              style: AppTextStyles.heading4.copyWith(
-                color: AppColors.goldAccent,
-                fontSize: 18,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              service['price'],
-              style: AppTextStyles.heading3.copyWith(
-                color: AppColors.goldAccent,
-              ),
-            ),
-            const SizedBox(height: 20),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.lightGrey,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.info_outline, color: AppColors.goldAccent, size: 20),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Stripe integration is ready. API key configuration required.',
-                      style: AppTextStyles.bodySmall,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('Cancel', style: AppTextStyles.goldAccent),
+  Future<void> _handlePurchase(BuildContext context, Map<String, dynamic> service) async {
+    try {
+      // Extract price amount (remove $ and commas)
+      final priceStr = service['price']!.replaceAll('\$', '').replaceAll(',', '');
+      final priceInDollars = int.parse(priceStr);
+      // Convert dollars to cents (Stripe requires cents)
+      final amount = priceInDollars * 100;
+
+      await StripeService.createCheckoutSession(
+        productName: service['title']!,
+        productDescription: service['description']!,
+        amount: amount,
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Colors.red,
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, '/thank-you');
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.goldAccent,
-              foregroundColor: AppColors.deepBlack,
-            ),
-            child: Text('Proceed to Checkout', style: AppTextStyles.button),
-          ),
-        ],
-      ),
-    );
+        );
+      }
+    }
   }
 
   void _downloadDemoPDF(BuildContext context, String packageName) {
