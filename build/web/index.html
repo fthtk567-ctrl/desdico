@@ -57,16 +57,11 @@
   <title>DESDICO - Elite Architecture & Consultancy | Dilek Leyla LLC | Albuquerque, NM</title>
   <link rel="manifest" href="manifest.json">
 
-  <!-- Paddle.js Integration -->
-  <script src="https://cdn.paddle.com/paddle/paddle.js"></script>
+  <!-- Stripe.js Integration -->
+  <script src="https://js.stripe.com/v3/"></script>
   <script type="text/javascript">
-    // Initialize Paddle - Replace with your actual Vendor ID
-    // Get your Vendor ID from: https://vendors.paddle.com/authentication
-    if (typeof Paddle !== 'undefined') {
-      Paddle.Setup({ 
-        vendor: 12345  // REPLACE THIS with your actual Paddle Vendor ID
-      });
-    }
+    // Set Stripe Publishable Key
+    window.STRIPE_PUBLISHABLE_KEY = 'pk_live_51QfJJbHb7Q8Dl1lHRENoEGXsDdGe8mfsj8btDEgNbcEDNpBesYYWxAf9wqWCuDUBNdAowZpBxIPhPkE5rA25DSCr00AyZc0gtY';
   </script>
 
   <style>
